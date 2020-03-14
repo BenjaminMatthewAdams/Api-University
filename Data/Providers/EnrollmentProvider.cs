@@ -45,6 +45,7 @@ namespace Data.Providers
 				.Where(e => e.Id == enrollment.Id)
 				.Include(e => e.Student)
 				.Include(e => e.Course)
+                .Include(e => e.Professor) // include the Professor entity so it can be referenced, otherwise, null ref on enrollment.Professor
 				.SingleOrDefault();
 		}
 	}

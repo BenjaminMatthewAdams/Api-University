@@ -3,6 +3,10 @@ using Data.Entities;
 using Data.Exceptions;
 using Data.Validation;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Providers
 {
@@ -41,5 +45,12 @@ namespace Data.Providers
 			_context.Students.Add(studentEntity);
 			_context.SaveChanges();
 		}
-	}
+
+        public IEnumerable<Enrollment> GetEnrollments(int studentId)
+        {
+            return _context.Enrollments.Where(e => e.StudentId == studentId)
+                .Include(e => e.Course)
+                .Include(e => e.Professor);
+        }
+    }
 }

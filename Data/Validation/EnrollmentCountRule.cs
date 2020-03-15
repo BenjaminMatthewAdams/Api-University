@@ -1,6 +1,7 @@
 ﻿using Data.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Data.Validation
 {
@@ -27,8 +28,11 @@ namespace Data.Validation
 		/// <returns> The value indicating whether the target object passed the validation rule. </returns>
 		public void Enforce(Enrollment target, IDictionary<string, string> errors)
 		{
-			throw new NotImplementedException();
-		}
-	}
+            var currentEnrollments = _context.Enrollments.Where(enr => enr.Student.Id == target.StudentId);
+            if (currentEnrollments.Count() < 2)
+                return;
+            errors?.Add("Student", "A student can only be enrolled in a maximum of 2 courses.");
+        }
+    }
 
 }

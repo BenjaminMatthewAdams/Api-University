@@ -1,4 +1,5 @@
-﻿using Data.Common;
+﻿using System.Collections.Generic;
+using Data.Common;
 using Data.Entities;
 
 namespace Data.Providers
@@ -13,5 +14,7 @@ namespace Data.Providers
 		/// </summary>
 		/// <param name="student"> The student object to create. </param>
 		void Create(Student student);
-	}
+
+	    IEnumerable<Enrollment> GetEnrollments(int studentId);
+    }
 }

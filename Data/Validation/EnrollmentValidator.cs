@@ -1,22 +1,25 @@
 ﻿using Data.Entities;
 using System;
+using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 
 namespace Data.Validation
 {
-	/// <summary>
+	/// <summary>   
 	///		Represents an enrollment validator. 
 	/// </summary>
 	public class EnrollmentValidator
 		: IValidator<Enrollment>
 	{
-		/// <summary>
-		///		Creates a new instance of a <see cref="EnrollmentValidator"/>.
-		/// </summary>
-		public EnrollmentValidator(IEnumerable<IValidationRule<Enrollment>> rules)
-		{
-			
-		}
+	    private readonly IEnumerable<IValidationRule<Enrollment>> _enrollmentValidationRules;
+
+        /// <summary>
+        ///		Creates a new instance of a <see cref="EnrollmentValidator"/>.
+        /// </summary>
+        public EnrollmentValidator(IEnumerable<IValidationRule<Enrollment>> enrollmentValidationRules)
+        {
+            _enrollmentValidationRules = enrollmentValidationRules;
+        }
 
 		/// <summary>
 		///		Determines if the target object is valid. 
@@ -26,7 +29,10 @@ namespace Data.Validation
 		/// <returns> The value indicating whether the object is valid. </returns>
 		public bool IsValid(Enrollment target, out Dictionary<string, string> errors)
 		{
-			throw new NotImplementedException();
-		}
+		    errors = new Dictionary<string, string>();
+		    foreach (var rule in _enrollmentValidationRules)
+		        rule.Enforce(target, errors);
+		    return !errors.Any();
+        }
 	}
 }

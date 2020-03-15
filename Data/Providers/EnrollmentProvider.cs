@@ -37,7 +37,11 @@ namespace Data.Providers
 		/// <returns> The created course. </returns>
 		public Enrollment Enroll(Student student, Course course, Professor professor)
 		{
-			var enrollment = new Enrollment { CourseId = course.Id, StudentId = student.Id, ProfessorId = professor.Id };
+		    var enrollment = new Enrollment { CourseId = course.Id, StudentId = student.Id, ProfessorId = professor.Id };
+
+            if (!_validator.IsValid(enrollment, out var errors))
+		        throw new ValidationException(errors);
+
 			_context.Enrollments.Add(enrollment);
 			_context.SaveChanges();
 
@@ -45,7 +49,7 @@ namespace Data.Providers
 				.Where(e => e.Id == enrollment.Id)
 				.Include(e => e.Student)
 				.Include(e => e.Course)
-                .Include(e => e.Professor) // include the Professor entity so it can be referenced, otherwise, null ref on enrollment.Professor
+                .Include(e => e.Professor)
 				.SingleOrDefault();
 		}
 	}

@@ -49,7 +49,7 @@ namespace Api
 				config.For<IEnumerable<IValidationRule<Professor>>>().Use(new List<IValidationRule<Professor>> { new ProfessorNameRequiredRule() });
 				config.For<IValidator<Enrollment>>().Use<EnrollmentValidator>()
 					.Ctor<IEnumerable<IValidationRule<Enrollment>>>()
-						.Is(ctx => new List<IValidationRule<Enrollment>> { ctx.GetInstance<EnrollmentCountRule>() });
+						.Is(ctx => new List<IValidationRule<Enrollment>> { ctx.GetInstance<EnrollmentCountRule>(), ctx.GetInstance<EnrollmentCourseProfessorRule>() });
 
 				config.Populate(services);
 			});

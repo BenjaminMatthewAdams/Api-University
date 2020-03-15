@@ -1,7 +1,9 @@
-﻿using Data.Providers;
+﻿using Api.Models;
+using Data.Providers;
 using Microsoft.AspNetCore.Mvc;
 using Data.Entities;
 using Data.Exceptions;
+using System.Linq;
 
 namespace Api.Controllers
 {
@@ -20,18 +22,19 @@ namespace Api.Controllers
 
         [HttpPost]
 	    [Route("api/enrollment/enroll")]
-        public IActionResult EnrollStudent(int studentId, int courseId, int professorId)
+        public IActionResult EnrollStudent([FromBody] EnrollmentModel enrollment)
 	    {
 	        try
 	        {
-	            _enrollmentProvider.Enroll(new Student {Id = studentId}, new Course {Id = courseId}, new Professor {Id = professorId});
+	            var x = _enrollmentProvider.Enroll(new Student {Id = enrollment.StudentId }, new Course {Id = enrollment.CourseId }, new Professor {Id = enrollment.ProfessorId });
+	            enrollment.Id = x.Id;
 	        }
 	        catch (ValidationException ve)
 	        {
 	            return BadRequest(ve.Message);
 	        }
 
-	        return Ok();
+	        return Ok(enrollment);
 	    }
 
 	}
